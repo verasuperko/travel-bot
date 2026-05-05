@@ -1,5 +1,5 @@
 import os
-import google.generativeai as genai
+from google import genai
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, MessageHandler, CallbackQueryHandler, filters, ContextTypes
 
@@ -17,8 +17,7 @@ EXAMPLE_POSTS = """Пример 1:
 Она такая «ваааау прикинь! Мы в Чили!», а я ей «А чего такого?» Не жизнь, а невероятное чудо! Тонкой нитью хочу перманентно это ощущение внутри ✨"""
 
 def generate_post(user_text):
-    genai.configure(api_key=GEMINI_KEY)
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    client = genai.Client(api_key=GEMINI_KEY)
     prompt = f"""Ты помощник для написания постов в телеграм-канал о путешествиях. Пиши в точном стиле автора.
 
 СТИЛЬ (реальные посты автора):
@@ -36,7 +35,7 @@ def generate_post(user_text):
 Напиши пост про: {user_text}
 
 Только текст поста, без предисловий."""
-    response = model.generate_content(prompt)
+    response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
     return response.text
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
