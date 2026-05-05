@@ -1,4 +1,5 @@
-import os
+if __name__ == "__main__":
+    main()
 import google.generativeai as genai
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, MessageHandler, CallbackQueryHandler, filters, ContextTypes
