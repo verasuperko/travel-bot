@@ -110,7 +110,8 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await query.edit_message_text(f"Ошибка публикации: {e}")
     elif query.data == "edit":
         context.user_data["waiting_edit"] = True
-        await query.edit_message_text("Пришли свой вариант текста — опубликую его.")
+        await query.edit_message_text("Скопируй текст ниже, отредактируй и пришли мне:")
+        await context.bot.send_message(chat_id=query.message.chat_id, text=context.user_data.get("last_post", ""))
     elif query.data == "redo":
         await query.edit_message_text("Напиши ещё раз что происходит, переделаю!")
     elif query.data == "redo_photo":
