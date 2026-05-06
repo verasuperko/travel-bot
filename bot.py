@@ -25,7 +25,7 @@ def generate_post(user_text):
         "Напиши пост про: " + user_text +
         "\n\nТолько текст поста."
     )
-    response = client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
+    response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
     return response.text
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
