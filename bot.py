@@ -101,9 +101,9 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         photo_id = context.user_data.get("last_photo_id")
         try:
             if photo_id:
-                await context.bot.send_photo(chat_id=CHANNEL, photo=photo_id, caption=post, parse_mode="Markdown")
+                await context.bot.send_photo(chat_id=CHANNEL, photo=photo_id, caption=post, parse_mode="MarkdownV2")
             else:
-                await context.bot.send_message(chat_id=CHANNEL, text=post, parse_mode="Markdown")
+                await context.bot.send_message(chat_id=CHANNEL, text=post, parse_mode="MarkdownV2")
             context.user_data["last_photo_id"] = None
             await query.edit_message_text("Опубликовано!")
         except Exception as e:
