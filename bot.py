@@ -1,10 +1,10 @@
 import os
-from google import genai
+import anthropic
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, MessageHandler, CallbackQueryHandler, filters, ContextTypes
 
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
-GEMINI_KEY = os.environ.get("GEMINI_KEY")
+ANTHROPIC_KEY = os.environ.get("ANTHROPIC_KEY")
 CHANNEL = os.environ.get("CHANNEL", "@gdetytamopyat")
 
 EXAMPLE_POSTS = (
@@ -17,16 +17,22 @@ EXAMPLE_POSTS = (
 )
 
 def generate_post(user_text):
-    client = genai.Client(api_key=GEMINI_KEY)
+    client = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
     prompt = (
         "Пиши посты для телеграм-канала о путешествиях в стиле автора.\n\n"
         "Примеры постов:\n" + EXAMPLE_POSTS +
-        "\n\nСтиль: живой язык, самоирония, зачёркнутый текст ~~вот так~~, эмодзи умеренно, без хэштегов, без тире в начале абзацев.\n\n"
+        "\n\nСтиль: живой разговорный язык, самоирония. "
+        "Форматирование Telegram: *жирный* для ключевых мыслей, _курсив_ для атмосферных деталей, ~~зачёркнутый~~ для сарказма. "
+        "Раздели пост на 2-3 абзаца. Эмодзи умеренно, без хэштегов, без тире в начале абзацев.\n\n"
         "Напиши пост про: " + user_text +
         "\n\nТолько текст поста."
     )
-    response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
-    return response.text
+    message = client.messages.create(
+        model="claude-sonnet-4-20250514",
+        max_tokens=1000,
+        messages=[{"role": "user", "content": prompt}]
+    )
+    return message.content[0].text
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_text = update.message.text
